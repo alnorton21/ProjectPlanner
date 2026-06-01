@@ -116,16 +116,16 @@ export default function GanttView() {
                 <p className="font-semibold mb-2">{task.name}</p>
                 <div className="space-y-1 text-xs text-slate-300">
                   <p>Progress: {task.progress}%</p>
-                  {(task as { assignedTo?: string }).assignedTo && (
-                    <p>Assigned: {(task as { assignedTo: string }).assignedTo}</p>
+                  {(task as unknown as { assignedTo?: string }).assignedTo && (
+                    <p>Assigned: {(task as unknown as { assignedTo: string }).assignedTo}</p>
                   )}
-                  {(task as { priority?: string }).priority && (
-                    <p>Priority: {(task as { priority: string }).priority}</p>
+                  {(task as unknown as { priority?: string }).priority && (
+                    <p>Priority: {(task as unknown as { priority: string }).priority}</p>
                   )}
                   <p>Start: {task.start.toLocaleDateString()}</p>
                   <p>End: {task.end.toLocaleDateString()}</p>
-                  {(task as { notes?: string }).notes && (
-                    <p className="mt-2 text-slate-400 italic truncate">{(task as { notes: string }).notes}</p>
+                  {(task as unknown as { notes?: string }).notes && (
+                    <p className="mt-2 text-slate-400 italic truncate">{(task as unknown as { notes: string }).notes}</p>
                   )}
                 </div>
               </div>

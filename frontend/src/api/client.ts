@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabase';
 import { parseISO } from 'date-fns';
-import type { Task, Alert, AlertConfig } from '../types';
+import type { Task, Alert, AlertConfig, TeamMember } from '../types';
 import { buildGanttData } from '../services/ganttBuilder';
 import { runAlertEngine } from '../services/alertEngine';
 import { buildProjectAnalytics, buildPortfolioAnalytics } from '../services/analyticsBuilder';
@@ -169,7 +169,7 @@ export const teamApi = {
           is_overloaded: overdue >= overdueThreshold,
         };
       })
-      .filter(Boolean);
+      .filter((m): m is TeamMember => m !== null);
   },
 
   getMember: async (name: string, projectId?: number) => {
