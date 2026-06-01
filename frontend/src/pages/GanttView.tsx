@@ -22,13 +22,15 @@ export default function GanttView() {
   const [groupBy, setGroupBy] = useState<GroupBy>('bucket');
   const ganttContainerRef = useRef<HTMLDivElement>(null);
   const [ganttHeight, setGanttHeight] = useState(600);
+  const [containerWidth, setContainerWidth] = useState(1200);
 
   useEffect(() => {
     const el = ganttContainerRef.current;
     if (!el) return;
     const observer = new ResizeObserver(entries => {
-      const h = entries[0]?.contentRect.height;
-      if (h && h > 100) setGanttHeight(Math.floor(h));
+      const { width, height } = entries[0]?.contentRect ?? {};
+      if (height && height > 100) setGanttHeight(Math.floor(height));
+      if (width && width > 100) setContainerWidth(Math.floor(width));
     });
     observer.observe(el);
     return () => observer.disconnect();
@@ -121,7 +123,21 @@ export default function GanttView() {
             tasks={tasks as Parameters<typeof Gantt>[0]['tasks']}
             viewMode={viewMode}
             listCellWidth="200px"
-            columnWidth={viewMode === ViewMode.Month ? 80 : viewMode === ViewMode.Week ? 50 : 40}
+            columnWidth={(() => {
+              const LIST_WIDTH = 200;
+              const chartWidth = Math.max(200, containerWidth - LIST_WIDTH);
+              const dates = tasks.flatMap(t => [t.start.getTime(), t.end.getTime()]);
+              const minT = Math.min(...dates);
+              const maxT = Math.max(...dates);
+              const diffDays = Math.max(1, (maxT - minT) / 86400000);
+              const unitsPerDay =
+                viewMode === ViewMode.Year ? 1 / 365 :
+                viewMode === ViewMode.Month ? 1 / 30 :
+                viewMode === ViewMode.Week ? 1 / 7 : 1;
+              const numUnits = Math.ceil(diffDays * unitsPerDay) + 2;
+              const MIN_COL = viewMode === ViewMode.Day ? 30 : viewMode === ViewMode.Week ? 30 : 50;
+              return Math.max(MIN_COL, Math.floor(chartWidth / numUnits));
+            })()}
             ganttHeight={ganttHeight}
             todayColor="rgba(59, 130, 246, 0.1)"
             TooltipContent={({ task }) => (
