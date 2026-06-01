@@ -31,7 +31,11 @@ const PROGRESS_NORMALIZE: Record<string, string> = {
   'not started': 'Not started',
   'in progress': 'In progress',
   'completed': 'Completed',
+  'complete': 'Completed',
+  'done': 'Completed',
+  'finished': 'Completed',
   'late': 'Late',
+  'overdue': 'Late',
   '': 'Not started',
 };
 
@@ -109,7 +113,7 @@ export async function parseExcelBrowser(file: File): Promise<ParseResult> {
 
     const assignedRaw = String(get('assigned to') ?? '').trim();
     const assignees = assignedRaw
-      .split(/[,;]+/)
+      .split(/\s*;\s*/)
       .map(s => s.trim())
       .filter(Boolean);
     assignees.forEach(a => assigneeSet.add(a));
@@ -122,7 +126,7 @@ export async function parseExcelBrowser(file: File): Promise<ParseResult> {
     const checklist = parseChecklist(checklistRaw);
 
     const progressRaw = get('progress');
-    const progressStr = normalizeProgress(progressRaw);
+    let progressStr = normalizeProgress(progressRaw);
 
     const percentRaw = get('% complete');
     let progressPercent = 0;
@@ -132,6 +136,7 @@ export async function parseExcelBrowser(file: File): Promise<ParseResult> {
       progressPercent = parseInt(percentRaw) || 0;
     }
     if (progressStr === 'Completed') progressPercent = 100;
+    if (progressPercent === 100 && progressStr !== 'Completed') progressStr = 'Completed';
 
     tasks.push({
       task_name: taskName,
