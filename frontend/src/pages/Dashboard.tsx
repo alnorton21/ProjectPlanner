@@ -1,8 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { projectsApi, alertsApi, importApi } from '../api/client';
 import { Project, Alert, ImportHistory } from '../types';
 import { formatDistanceToNow } from 'date-fns';
+import toast from 'react-hot-toast';
 import clsx from 'clsx';
 
 function HealthBadge({ health }: { health: Project['health'] }) {
@@ -42,6 +44,19 @@ function StatCard({ label, value, color }: { label: string; value: number; color
 }
 
 export default function Dashboard() {
+  const queryClient = useQueryClient();
+  const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
+
+  const deleteMutation = useMutation({
+    mutationFn: projectsApi.remove,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      toast.success('Project removed');
+      setConfirmDelete(null);
+    },
+    onError: () => toast.error('Failed to remove project'),
+  });
+
   const { data: projects = [], isLoading: projLoading } = useQuery<Project[]>({
     queryKey: ['projects'],
     queryFn: projectsApi.list,
@@ -159,7 +174,34 @@ export default function Dashboard() {
                     Updated {formatDistanceToNow(new Date(project.updated_at), { addSuffix: true })}
                   </p>
                 </div>
-                <HealthBadge health={project.health} />
+                <div className="flex items-center gap-2 shrink-0 ml-2">
+                  <HealthBadge health={project.health} />
+                  {confirmDelete === project.id ? (
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => deleteMutation.mutate(project.id)}
+                        disabled={deleteMutation.isPending}
+                        className="text-xs px-2 py-0.5 bg-red-600 hover:bg-red-700 text-white rounded"
+                      >
+                        Confirm
+                      </button>
+                      <button
+                        onClick={() => setConfirmDelete(null)}
+                        className="text-xs px-2 py-0.5 bg-slate-600 hover:bg-slate-500 text-slate-200 rounded"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setConfirmDelete(project.id)}
+                      className="text-slate-500 hover:text-red-400 transition-colors text-lg leading-none"
+                      title="Remove project"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="mb-3">
