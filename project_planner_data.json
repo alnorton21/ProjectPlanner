@@ -1,0 +1,164 @@
+{
+  "projects": [
+    {
+      "id": "de9246ab",
+      "title": "PSP 2026 - 3.1a",
+      "description": "",
+      "start_date": "2026-01-1",
+      "due_date": "2026-12-31",
+      "employees": [
+        {
+          "name": "Alan Norton Jr.",
+          "role": "Software Development Team Lead",
+          "email": "nortona@rowan.edu"
+        },
+        {
+          "name": "Elijah Thompson",
+          "role": "Software Developer",
+          "email": ""
+        },
+        {
+          "name": "Omkar Ramakant Nikam",
+          "role": "Part-Time Software Developer",
+          "email": "nikamo46@rowan.edu"
+        }
+      ],
+      "color": "#3b82f6",
+      "activities": [
+        {
+          "id": "4ad0b20c",
+          "title": "Kickoff Meeting",
+          "description": "",
+          "employees": [
+            "Alan Norton Jr."
+          ],
+          "priority": "High",
+          "start_date": "2026-02-12",
+          "due_date": "2026-02-12",
+          "work_items": []
+        },
+        {
+          "id": "02a3d96c",
+          "title": "Enhance Drainage Applications",
+          "description": "",
+          "employees": [],
+          "priority": "Medium",
+          "start_date": "2026-02-12",
+          "due_date": "2026-11-30",
+          "work_items": [
+            {
+              "id": "ddc42c73",
+              "title": "Validate Thresholding and Incident Count Method",
+              "description": "Examine results from matching grouping incidents with ranking incidents",
+              "assigned_to": [
+                "Elijah Thompson"
+              ],
+              "status": "Completed",
+              "priority": "Medium",
+              "start_date": "2026-03-18",
+              "due_date": "2026-05-13",
+              "progress": 100,
+              "checklist": [
+                {
+                  "text": "Take the incident count from grouping and put in base locations table.",
+                  "done": true
+                },
+                {
+                  "text": "Stop recalculation of incidents in ranking.",
+                  "done": true
+                },
+                {
+                  "text": "Compare results between this method and previous method.",
+                  "done": true
+                }
+              ]
+            },
+            {
+              "id": "9b4ef6db",
+              "title": "Incident Threshold Investigation",
+              "description": "Analyze the impact of multiple threshold values for excluding incidents within DMS grouping process",
+              "assigned_to": [
+                "Elijah Thompson",
+                "Omkar Ramakant Nikam"
+              ],
+              "status": "Not Started",
+              "priority": "Medium",
+              "start_date": "2026-05-13",
+              "due_date": "2026-06-10",
+              "progress": 0,
+              "checklist": []
+            },
+            {
+              "id": "ddd38d85",
+              "title": "PDMS Reports - Revise Work Request and Memos",
+              "description": "",
+              "assigned_to": [
+                "Elijah Thompson",
+                "Omkar Ramakant Nikam"
+              ],
+              "status": "Not Started",
+              "priority": "Medium",
+              "start_date": "2026-05-13",
+              "due_date": "2026-06-10",
+              "progress": 0,
+              "checklist": []
+            },
+            {
+              "id": "6aadb213",
+              "title": "Investigate Use of STRAHNET in Old System",
+              "description": "",
+              "assigned_to": [
+                "Elijah Thompson"
+              ],
+              "status": "Not Started",
+              "priority": "Medium",
+              "start_date": "2026-05-13",
+              "due_date": "2026-05-14",
+              "progress": 0,
+              "checklist": []
+            },
+            {
+              "id": "c8b36808",
+              "title": "DMS Ranking - Add New Year Data Preparation Feature",
+              "description": "",
+              "assigned_to": [
+                "Elijah Thompson"
+              ],
+              "status": "Not Started",
+              "priority": "Medium",
+              "start_date": "2026-05-13",
+              "due_date": "2026-06-10",
+              "progress": 0,
+              "checklist": []
+            },
+            {
+              "id": "a19d6fb2",
+              "title": "Update User Manuals",
+              "description": "",
+              "assigned_to": [
+                "Elijah Thompson",
+                "Omkar Ramakant Nikam"
+              ],
+              "status": "Not Started",
+              "priority": "Medium",
+              "start_date": "2026-05-13",
+              "due_date": "2026-11-30",
+              "progress": 0,
+              "checklist": [
+                {
+                  "text": "DMS Ranking",
+                  "done": false
+                },
+                {
+                  "text": "PDMS Reports",
+                  "done": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "global_employees": []
+}

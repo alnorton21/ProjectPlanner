@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Gantt chart dark theme overrides */
+.gantt-task-react {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+._2k9Ys {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+}
+
+._CZjuD {
+  stroke: #334155 !important;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Mobile bottom padding for tab bar */
+@media (max-width: 768px) {
+  main {
+    padding-bottom: 5rem !important;
+  }
+}
