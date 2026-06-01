@@ -151,7 +151,7 @@ export const teamApi = {
     return (members ?? [])
       .map((m: { name: string }) => {
         const memberTasks = (allTasks ?? []).filter((t: any) =>
-          (t.assigned_to ?? '').split(',').map((s: string) => s.trim()).includes(m.name)
+          (t.assigned_to ?? '').split(';').map((s: string) => s.trim()).includes(m.name)
         ) as Task[];
         const total = memberTasks.length;
         if (total === 0) return null;
@@ -184,7 +184,7 @@ export const teamApi = {
     const { data: tasks, error } = await query;
     if (error) throw new Error(error.message);
     const filtered = (tasks ?? []).filter((t: Task) =>
-      (t.assigned_to ?? '').split(',').map((s: string) => s.trim()).includes(name)
+      (t.assigned_to ?? '').split(';').map((s: string) => s.trim()).includes(name)
     ) as Task[];
     const now = new Date();
     const total = filtered.length;

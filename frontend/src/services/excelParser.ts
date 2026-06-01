@@ -149,7 +149,7 @@ export async function parseExcelBrowser(file: File): Promise<ParseResult> {
       progress: progressStr,
       progress_percent: progressPercent,
       priority: String(get('priority') ?? 'Medium').trim() || 'Medium',
-      assigned_to: assignees.join(', ') || null,
+      assigned_to: assignees.join('; ') || null,
       created_by: String(get('created by') ?? '').trim() || null,
       created_date: excelDateToISO(get('created date')),
       start_date: excelDateToISO(get('start date')),
