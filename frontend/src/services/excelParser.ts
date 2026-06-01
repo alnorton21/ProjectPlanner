@@ -103,9 +103,12 @@ export async function parseExcelBrowser(file: File): Promise<ParseResult> {
   const assigneeSet = new Set<string>();
 
   for (const row of rows) {
-    const get = (colLower: string): unknown => {
-      const key = headerKeys.find(k => k.toLowerCase() === colLower);
-      return key ? row[key] : '';
+    const get = (...cols: string[]): unknown => {
+      for (const col of cols) {
+        const key = headerKeys.find(k => k.toLowerCase() === col);
+        if (key !== undefined && row[key] !== '' && row[key] !== undefined && row[key] !== null) return row[key];
+      }
+      return '';
     };
 
     const taskName = String(get('task name') ?? '').trim();
@@ -118,17 +121,19 @@ export async function parseExcelBrowser(file: File): Promise<ParseResult> {
       .filter(Boolean);
     assignees.forEach(a => assigneeSet.add(a));
 
-    const labels = labelCols
-      .map(col => String(row[col] ?? '').trim())
-      .filter(Boolean);
+    // Support both multi-column labels (label 1…label 6) and a single semicolon-separated Labels column
+    const singleLabels = String(get('labels') ?? '').trim();
+    const labels = singleLabels
+      ? singleLabels.split(/\s*;\s*/).map(s => s.trim()).filter(Boolean)
+      : labelCols.map(col => String(row[col] ?? '').trim()).filter(Boolean);
 
-    const checklistRaw = get('checklist items');
+    const checklistRaw = get('checklist items', 'completed checklist items');
     const checklist = parseChecklist(checklistRaw);
 
-    const progressRaw = get('progress');
+    const progressRaw = get('progress', 'status');
     let progressStr = normalizeProgress(progressRaw);
 
-    const percentRaw = get('% complete');
+    const percentRaw = get('% complete', 'percent complete', '% completed');
     let progressPercent = 0;
     if (typeof percentRaw === 'number') {
       progressPercent = Math.round(percentRaw * (percentRaw <= 1 ? 100 : 1));
@@ -140,7 +145,7 @@ export async function parseExcelBrowser(file: File): Promise<ParseResult> {
 
     tasks.push({
       task_name: taskName,
-      bucket_name: String(get('bucket name') ?? '').trim() || null,
+      bucket_name: String(get('bucket name', 'bucket') ?? '').trim() || null,
       progress: progressStr,
       progress_percent: progressPercent,
       priority: String(get('priority') ?? 'Medium').trim() || 'Medium',
@@ -149,7 +154,7 @@ export async function parseExcelBrowser(file: File): Promise<ParseResult> {
       created_date: excelDateToISO(get('created date')),
       start_date: excelDateToISO(get('start date')),
       due_date: excelDateToISO(get('due date')),
-      completed_date: excelDateToISO(get('completed date')),
+      completed_date: excelDateToISO(get('completed date', 'completed', 'date completed')),
       labels: JSON.stringify(labels),
       notes: String(get('notes') ?? '').trim() || null,
       checklist_total: checklist.total,

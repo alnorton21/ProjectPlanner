@@ -82,6 +82,8 @@ export const projectsApi = {
   },
 
   remove: async (id: number) => {
+    await supabase.from('tasks').delete().eq('project_id', id);
+    await supabase.from('alerts').delete().eq('project_id', id);
     const { error } = await supabase
       .from('projects')
       .update({ is_active: false })

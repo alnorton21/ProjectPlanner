@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Gantt, ViewMode } from 'gantt-task-react';
 import 'gantt-task-react/dist/index.css';
@@ -20,6 +20,19 @@ export default function GanttView() {
   const { activeProjectId } = useStore();
   const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.Month);
   const [groupBy, setGroupBy] = useState<GroupBy>('bucket');
+  const ganttContainerRef = useRef<HTMLDivElement>(null);
+  const [ganttHeight, setGanttHeight] = useState(600);
+
+  useEffect(() => {
+    const el = ganttContainerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(entries => {
+      const h = entries[0]?.contentRect.height;
+      if (h && h > 100) setGanttHeight(Math.floor(h));
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const { data: projects = [] } = useQuery<Project[]>({
     queryKey: ['projects'],
@@ -50,9 +63,9 @@ export default function GanttView() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col h-full gap-4">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-3 bg-slate-800 rounded-xl border border-slate-700 p-3">
+      <div className="flex flex-wrap items-center gap-3 bg-slate-800 rounded-xl border border-slate-700 p-3 shrink-0">
         <div className="flex items-center gap-1 bg-slate-900 rounded-lg p-0.5">
           {VIEW_MODES.map(m => (
             <button
@@ -94,7 +107,7 @@ export default function GanttView() {
       </div>
 
       {/* Gantt */}
-      <div className="bg-white rounded-xl overflow-hidden" style={{ minHeight: 400 }}>
+      <div ref={ganttContainerRef} className="bg-white rounded-xl overflow-hidden flex-1 min-h-0">
         {isLoading ? (
           <div className="flex items-center justify-center h-64 text-slate-400 bg-slate-800">
             Loading Gantt chart...
@@ -109,7 +122,7 @@ export default function GanttView() {
             viewMode={viewMode}
             listCellWidth="200px"
             columnWidth={viewMode === ViewMode.Month ? 80 : viewMode === ViewMode.Week ? 50 : 40}
-            ganttHeight={600}
+            ganttHeight={ganttHeight}
             todayColor="rgba(59, 130, 246, 0.1)"
             TooltipContent={({ task }) => (
               <div className="bg-slate-800 text-slate-100 p-3 rounded-lg shadow-xl border border-slate-700 max-w-xs text-sm">
