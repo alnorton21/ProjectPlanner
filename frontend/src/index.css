@@ -13,19 +13,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Gantt chart dark theme overrides */
-.gantt-task-react {
-  background: #0f172a;
-  color: #e2e8f0;
-}
-
+/* Gantt horizontal scrollbar — light theme to match bg-white container */
 ._2k9Ys {
-  background: #0f172a !important;
-  color: #e2e8f0 !important;
-}
-
-._CZjuD {
-  stroke: #334155 !important;
+  background: #f8fafc;
 }
 
 /* Custom scrollbar */
